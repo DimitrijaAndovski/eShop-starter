@@ -8,7 +8,7 @@ namespace eShop.Repositories;
 
 public class ProductRepository(EShopContext context) : IProductRepository
 {
-    public async Task<int> AddProduct(PostProductDto product)
+    public async Task<bool> AddProduct(PostProductDto product)
     {
         try
         {
@@ -26,8 +26,7 @@ public class ProductRepository(EShopContext context) : IProductRepository
             };
 
             context.Products.Add(item);
-            await context.SaveChangesAsync();
-            return item.Id;
+            return true;
         }
         catch (Exception ex)
         {
@@ -43,7 +42,7 @@ public class ProductRepository(EShopContext context) : IProductRepository
             if(product is null) return false;
             context.Products.Remove(product);
             return true;
-            
+
         }
         catch (Exception ex)
         {
@@ -126,9 +125,8 @@ public class ProductRepository(EShopContext context) : IProductRepository
             item.ProductName = product.Name;
             item.ImageUrl = product.ImageUrl;
 
-            await context.SaveChangesAsync();
-            return true;
             
+            return true;
         }
         catch (Exception ex)
         {

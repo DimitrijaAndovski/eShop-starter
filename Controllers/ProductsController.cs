@@ -11,14 +11,14 @@ namespace eShop.Controllers;
 
 [Route("api/products")]
 [ApiController]
-public class ProductsController(IProductRepository repo) : ControllerBase
+public class ProductsController(IUnitOfWork uow) : ControllerBase
 {
     [HttpGet()]
     public async Task<ActionResult> ListAllProducts()
     {
         try
         {
-            var products = await repo.ListAllProducts();
+            var products = await uow.ProductRepository.ListAllProducts();
             return Ok(new {Success = true, StatusCode = 200, Items = products.Count, Data = products});
         }
         catch
@@ -32,7 +32,7 @@ public class ProductsController(IProductRepository repo) : ControllerBase
     {
         try
         {
-            var product = await repo.FindProduct(id);
+            var product = await uow.ProductRepository.FindProduct(id);
             return Ok(new { Success = true, StatusCode = 200, Items = 1, Data = product });
         }
         catch
@@ -48,13 +48,17 @@ public class ProductsController(IProductRepository repo) : ControllerBase
     {
         try
         {
-            var id = await repo.AddProduct(product);
-            return CreatedAtAction(nameof(FindProduct), new { id }, product);
+            if(await uow.ProductRepository.AddProduct(product))
+            {
+                await uow.Complete();
+                return StatusCode(201, product);
+            }
+           
+            return StatusCode(500, "Något server fel inträffade!");
         }
         catch
         {  
             return StatusCode(500, "Något server fel inträffade!");
-
         }
     }
 
@@ -64,7 +68,7 @@ public class ProductsController(IProductRepository repo) : ControllerBase
 
         try
         {
-            var product = await repo.FindProduct(itemNumber);
+            var product = await uow.ProductRepository.FindProduct(itemNumber);
             if (product is null) return NotFound();
 
             return Ok(new { Success = true, StatusCode = 200, Items = 1, Data = product });
@@ -82,7 +86,12 @@ public class ProductsController(IProductRepository repo) : ControllerBase
     {
         try
         {
-            if(await repo.UpdateProduct(id, product))return NoContent();
+            if(await uow.ProductRepository.UpdateProduct(id, product))
+            {
+                await uow.Complete();
+                return NoContent();
+            }
+
             return StatusCode(500, "Något server fel inträffade!");
             
         }
@@ -99,7 +108,11 @@ public class ProductsController(IProductRepository repo) : ControllerBase
     {
         try
         {
-            if(await repo.DeleteProduct(id)) return NoContent();
+            if(await uow.ProductRepository.DeleteProduct(id)) 
+            {
+                await uow.Complete();
+                return NoContent();
+            }
             return StatusCode(500, "Ett server fel inträffade!");
 
         }

@@ -34,8 +34,9 @@ builder.Services.AddIdentityCore<User>(options =>
 // Registera vår TokenServer i dotnet's dependency lista...
 builder.Services.AddScoped<TokenService>();
 
-builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
+// builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
+// builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddControllers()  ;
 // builder.Services.AddControllers(options =>
