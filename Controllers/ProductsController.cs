@@ -1,0 +1,113 @@
+using eShop.Data;
+using eShop.DTOs;
+using eShop.DTOs.Products;
+using eShop.Entities;
+using eShop.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace eShop.Controllers;
+
+[Route("api/products")]
+[ApiController]
+public class ProductsController(IProductRepository repo) : ControllerBase
+{
+    [HttpGet()]
+    public async Task<ActionResult> ListAllProducts()
+    {
+        try
+        {
+            var products = await repo.ListAllProducts();
+            return Ok(new {Success = true, StatusCode = 200, Items = products.Count, Data = products});
+        }
+        catch
+        {
+            return StatusCode(500, "Server fel inträffade");
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult> FindProduct(int id)
+    {
+        try
+        {
+            var product = await repo.FindProduct(id);
+            return Ok(new { Success = true, StatusCode = 200, Items = 1, Data = product });
+        }
+        catch
+        {  
+            return StatusCode(500, "Server fel inträffade, vi kan inte hitta produkten");
+
+        }
+    
+    }
+
+    [HttpPost()]
+    public async Task<ActionResult> AddProduct(PostProductDto product)
+    {
+        try
+        {
+            var id = await repo.AddProduct(product);
+            return CreatedAtAction(nameof(FindProduct), new { id }, product);
+        }
+        catch
+        {  
+            return StatusCode(500, "Något server fel inträffade!");
+
+        }
+    }
+
+    [HttpGet("product/{itemNumber}")]
+    public async Task<ActionResult> FindProduct(string itemNumber)
+    {
+
+        try
+        {
+            var product = await repo.FindProduct(itemNumber);
+            if (product is null) return NotFound();
+
+            return Ok(new { Success = true, StatusCode = 200, Items = 1, Data = product });
+        }
+        catch
+        {
+            return StatusCode(500, "Server fel inträffade, vi kan inte hitta produkten");
+        }
+    }
+
+    
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateProduct(int id, PutProductDto product)
+    {
+        try
+        {
+            if(await repo.UpdateProduct(id, product))return NoContent();
+            return StatusCode(500, "Något server fel inträffade!");
+            
+        }
+        catch
+        {
+            return StatusCode(500, "Något server fel inträffade!");
+
+        }
+
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> RemoveProduct(int id)
+    {
+        try
+        {
+            if(await repo.DeleteProduct(id)) return NoContent();
+            return StatusCode(500, "Ett server fel inträffade!");
+
+        }
+        catch
+        {
+            return StatusCode(500, "Ett server fel inträffade!");
+        }
+
+    }
+}
+
