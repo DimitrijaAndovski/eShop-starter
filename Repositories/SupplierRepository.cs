@@ -29,7 +29,7 @@ public class SupplierRepository(EShopContext context) : ISupplierRepository
             context.Suppliers.Add(entity);
             await context.SaveChangesAsync();
             
-            return entity.SupplierId;
+            return entity.Id;
         }
         catch (Exception ex)
         {
@@ -45,7 +45,7 @@ public class SupplierRepository(EShopContext context) : ISupplierRepository
 
              GetSupplierDto dto = new()
              {
-                Id = supplier.SupplierId,
+                Id = supplier.Id,
                 Name = supplier.SupplierName,
                 Email = supplier.Email,
                 Phone = supplier.Phone,
@@ -74,7 +74,7 @@ public class SupplierRepository(EShopContext context) : ISupplierRepository
             {
                 var dto = new GetSuppliersDto
                 {
-                    Id = supplier.SupplierId,
+                    Id = supplier.Id,
                     Name = supplier.SupplierName,
                     Email = supplier.Email,
                     Phone = supplier.Phone

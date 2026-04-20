@@ -2,13 +2,9 @@
 
 namespace eShop.Entities;
 
-public record Customer
+public class Customer : BaseEntity
 {
-    public int CustomerId { get; set; }
-    [NotNull]
-    public string FirstName { get; set; }
-    [NotNull]
-    public string LastName { get; set; }
-    [NotNull]
-    public string Email { get; set; }
+    public required string FirstName { get; set; }
+    public required string LastName { get; set; }
+    public required string Email { get; set; }
 }

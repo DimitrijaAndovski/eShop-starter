@@ -9,14 +9,14 @@ namespace eShop.Controllers;
 
 [Route("api/suppliers")]
 [ApiController]
-public class SuppliersController(ISupplierRepository repo) : ControllerBase
+public class SuppliersController(IGenericRepository<Supplier> repo) : ControllerBase
 {
     [HttpGet()]
     public async Task<ActionResult> ListAllSuppliers()
     {
         try
         {
-            List<GetSuppliersDto> suppliers = await repo.ListAllSuppliers();
+            var suppliers = await repo.ListAllAsync();
             return Ok(new { Success = true, StatusCode = 200, Items = suppliers.Count, Data = suppliers });     
         }
         catch 
@@ -30,7 +30,7 @@ public class SuppliersController(ISupplierRepository repo) : ControllerBase
     {
         try
         {
-            GetSupplierDto supplier = await repo.FindSupplier(id);
+            var supplier = await repo.FindByIdAsync(id);
             return Ok(new { Success = true, StatusCode = 200, Items = 1, Data = supplier });
         }
         catch 
@@ -39,27 +39,27 @@ public class SuppliersController(ISupplierRepository repo) : ControllerBase
         }
     }
 
-    [HttpPost()]
-    public async Task<ActionResult> AddSupplier(PostSupplierDto supplier)
-    {
-        try
-        {
-            var id = await repo.AddSupplier(supplier);
+    // [HttpPost()]
+    // public async Task<ActionResult> AddSupplier(PostSupplierDto supplier)
+    // {
+    //     try
+    //     {
+    //         var id = await uow.SupplierRepository.AddSupplier(supplier);
 
-            if(await repo.AddSupplier(supplier) > 0)
-            {
-                return CreatedAtAction(nameof(FindSupplier), new { id }, supplier);
-            }
-            else
-            {
-                return BadRequest("Vi saknar information angående fel");
-            }
+    //         if(await uow.SupplierRepository.AddSupplier(supplier) > 0)
+    //         {
+    //             return CreatedAtAction(nameof(FindSupplier), new { id }, supplier);
+    //         }
+    //         else
+    //         {
+    //             return BadRequest("Vi saknar information angående fel");
+    //         }
             
-        }
-        catch
-        {
-            return StatusCode(500, "Något gick fel när vi skulle spara ny leverantör");
-        }
-    }
+    //     }
+    //     catch
+    //     {
+    //         return StatusCode(500, "Något gick fel när vi skulle spara ny leverantör");
+    //     }
+    // }
 }
 
