@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using eShop.Interfaces;
 using eShop.Repositories;
 using eShop;
+using eShop.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,11 @@ builder.Services.AddDbContext<EShopContext>(options =>
     // options.UseNpgsql(builder.Configuration.GetConnectionString("postgres"));
 });
 
+builder.Services.AddAutoMapper(options =>
+{
+    options.LicenseKey = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx1Y2t5UGVubnlTb2Z0d2FyZUxpY2Vuc2VLZXkvYmJiMTNhY2I1OTkwNGQ4OWI0Y2IxYzg1ZjA4OGNjZjkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2x1Y2t5cGVubnlzb2Z0d2FyZS5jb20iLCJhdWQiOiJMdWNreVBlbm55U29mdHdhcmUiLCJleHAiOiIxODA4MzUyMDAwIiwiaWF0IjoiMTc3Njg0MTIzMCIsImFjY291bnRfaWQiOiIwMTlkYjNmY2Q1MGU3NzVjOTFlNTA0ZDczYTNkYTJmYSIsImN1c3RvbWVyX2lkIjoiY3RtXzAxa3BzenYyZG5kN2o4cWt3ajhjMnBqeG1mIiwic3ViX2lkIjoiLSIsImVkaXRpb24iOiIwIiwidHlwZSI6IjIifQ.Lm1u7CVV3vHJFo9cxqHwRf_QdplgHnuU7vSID2M_HDUBoYL4U8PgVYelMVFkDvvFtxB1EaVz4d5058Ish8f0zCjxrUUFMzOXODuiJUuAlktFyKTGQ-oqh51UtI8kurDE52Lki7xSEAgoW2GDKZuZ8RBLfoixiA39OKKfFBBhBfYApen_wwXqEEJcFAtLO5hihNIWdKB86NUZeSpZhc04gSeIlLvncn0_l2ttMrQG3JmHkCpRq6XCYPAsERtTs_aKaVfZNsy4aYPu-EjK19_c04yJm25oGI271vv-FiLSNgk-VUgDm8zf6jgsLcJFR2hvmw8rQ0PjHLfnR62BOZEpCA";
+    options.AddProfile(new MappingProfiles());
+});
 // 1. Lägg till inloggningsinställningar (authentication)...
 builder.Services.AddIdentityCore<User>(options =>
 {

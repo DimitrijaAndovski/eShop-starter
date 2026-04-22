@@ -1,4 +1,5 @@
-﻿using eShop.Data;
+﻿using System.Linq.Expressions;
+using eShop.Data;
 using eShop.Entities;
 using eShop.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,12 +10,12 @@ public class GenericRepository<T>(EShopContext context) : IGenericRepository<T> 
 {
     public void Add(T entity)
     {
-        throw new NotImplementedException();
+        context.Set<T>().Add(entity);
     }
 
     public void Delete(T entity)
     {
-        throw new NotImplementedException();
+        context.Set<T>().Remove(entity);
     }
 
     public async Task<T> FindByIdAsync(int id)
@@ -27,8 +28,18 @@ public class GenericRepository<T>(EShopContext context) : IGenericRepository<T> 
         return await context.Set<T>().ToListAsync();
     }
 
+
     public void Update(T entity)
     {
-        throw new NotImplementedException();
+        context.Entry(entity).State = EntityState.Modified;
     }
+    public Task<T> FindAsync(Expression<Func<T, bool>> predicate)
+    {
+        return context.Set<T>().Where(predicate).FirstOrDefaultAsync();
+    }
+    public async Task<bool> SaveAllAsync()
+    {
+        return await context.SaveChangesAsync() > 0;
+    }
+
 }

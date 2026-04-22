@@ -173,5 +173,5 @@ C:\Users\Dimit\Documents\C#\Lektion-11\eShop-starter\obj\Debug\net10.0\eShop.pdb
 C:\Users\Dimit\Documents\C#\Lektion-11\eShop-starter\obj\Debug\net10.0\eShop.genruntimeconfig.cache
 C:\Users\Dimit\Documents\C#\Lektion-11\eShop-starter\obj\Debug\net10.0\ref\eShop.dll
 C:\Users\Dimit\Documents\C#\Lektion-11\eShop-starter\bin\Debug\net10.0\Data\Json\products.json
-C:\Users\Dimit\Documents\C#\Lektion-11\eShop-starter\bin\Debug\net10.0\Data\Json\suppliers.json
 C:\Users\Dimit\Documents\C#\Lektion-11\eShop-starter\obj\Debug\net10.0\eShop.sourcelink.json
+C:\Users\Dimit\Documents\C#\Lektion-11\eShop-starter\bin\Debug\net10.0\AutoMapper.dll
