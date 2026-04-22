@@ -19,8 +19,8 @@ public class SeedDatabase(UserManager<User> userManager, RoleManager<IdentityRol
 
         context.Database.Migrate();
 
-        await SeedUsers();
-        await SeedSuppliers(context);
+        // await SeedUsers();
+        // await SeedSuppliers(context);
         await SeedProducts(context);
     }
 

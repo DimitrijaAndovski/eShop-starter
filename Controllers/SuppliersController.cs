@@ -38,23 +38,7 @@ public class SuppliersController(IGenericRepository<Supplier> repo) : Controller
             return NotFound("Hittade inget!");
         }
     }
-
-    [HttpGet("name/{name}")]
-    public async Task<ActionResult> FindSupplierByName(string name)
-    {
-        try
-        {
-            var supplier = await repo.FindAsync(c => c.SupplierName.ToLower().Trim() == name.ToLower().Trim());
-            if(supplier is null) return NotFound("Hittade ingen leveantör");
-
-            return Ok(supplier);
-        }
-        catch
-        {
-            return NotFound("Hittade ingen leverantör");
-        }
-    }
-
+    
     [HttpPost()]
     public async Task<ActionResult> AddSupplier(Supplier supplier)
     {

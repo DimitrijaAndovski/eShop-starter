@@ -4,9 +4,11 @@ using eShop.DTOs;
 using eShop.DTOs.Products;
 using eShop.Entities;
 using eShop.Interfaces;
+using eShop.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace eShop.Controllers;
 
@@ -15,12 +17,14 @@ namespace eShop.Controllers;
 public class ProductsController(IGenericRepository<Product> repo, IMapper mapper) : ControllerBase
 {
     [HttpGet()]
-    public async Task<ActionResult> ListAllProducts()
+    public async Task<ActionResult> ListAllProducts(string? brand, string? sort)
     {
         try
         {
-            var products = await repo.ListAllAsync();
+            var spec = new ProductSpecification(itemnumber: null,brand, sort: sort);
+            var products = await repo.ListAsync(spec);
             var productsDto = mapper.Map<IList<GetProductsDto>>(products);
+
             return Ok(new {Success = true, StatusCode = 200, Items = products.Count, Data = productsDto});
         }
         catch
@@ -73,7 +77,9 @@ public class ProductsController(IGenericRepository<Product> repo, IMapper mapper
 
         try
         {
-            Product product = await repo.FindAsync(c=>c.ItemNumber ==itemNumber);
+            var spec = new ProductSpecification(itemNumber, brand: null, sort: null);
+            var product = await repo.FindAsync(spec);
+
             if (product is null) return NotFound();
 
             return Ok(new { Success = true, StatusCode = 200, Items = 1, Data = product });

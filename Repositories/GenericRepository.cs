@@ -27,19 +27,28 @@ public class GenericRepository<T>(EShopContext context) : IGenericRepository<T> 
     {
         return await context.Set<T>().ToListAsync();
     }
-
+    public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
+    {
+        return await ApplySpecification(spec).ToListAsync();
+    }
 
     public void Update(T entity)
     {
         context.Entry(entity).State = EntityState.Modified;
     }
-    public Task<T> FindAsync(Expression<Func<T, bool>> predicate)
-    {
-        return context.Set<T>().Where(predicate).FirstOrDefaultAsync();
-    }
     public async Task<bool> SaveAllAsync()
     {
         return await context.SaveChangesAsync() > 0;
     }
+    public async Task<T?> FindAsync(ISpecification<T> spec)
+    {
+        return await ApplySpecification(spec).FirstOrDefaultAsync();
+    }
+    private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+    {
+        return SpecificationValuator<T>.CreateQuery(context.Set<T>().AsQueryable(), spec);
+    }
+
 
 }
+
